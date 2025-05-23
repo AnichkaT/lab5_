@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Погода</title>
+</head>
+<body>
+  <h1>Дізнайся погоду</h1>
+  <input type="text" id="city" placeholder="Введіть місто">
+  <button onclick="getWeather()">Отримати погоду</button>
+  <div id="result"></div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById('city').value;
+      const apiKey = '6f6bff2d31bbff28c20c6df88da22924'; 
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ua`;
+
+      console.log(url)
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          console.log(res)
+          throw new Error("Помилка при отриманні даних");
+        }
+        const data = await res.json();
+
+        document.getElementById('result').innerHTML = `
+          <h2>Погода в ${data.name}</h2>
+          <p>Температура: ${data.main.temp}°C</p>
+          <p>Опис: ${data.weather[0].description}</p>
+          <p>Вологість: ${data.main.humidity}%</p>
+        `;
+      } catch (error) {
+        document.getElementById('result').innerHTML = `<p style="color:red;">${error.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
